@@ -1,0 +1,13 @@
+flowchart LR
+  U[User Browser] --> FE[Next.js + React (Vercel)]
+  FE -->|REST JSON + JWT| API[FastAPI (Render/Fly)]
+  API --> DB[(MongoDB)]
+
+  subgraph Frontend
+    FE --> LS[LocalStorage: access_token]
+  end
+
+  subgraph Backend
+    API --> AUTH[Auth: Argon2 + JWT]
+    API --> TASKS[Tasks CRUD + Filters]
+  end
