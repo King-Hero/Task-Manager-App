@@ -15,7 +15,7 @@ origins = [o.strip() for o in settings.CORS_ORIGINS.split(",") if o.strip()]
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://task-manager-frontend-619h.onrender.com",  # <-- frontend URL
+    "https://task-manager-frontend-6l9h.onrender.com",  # <-- frontend URL
 ]
 
 app.add_middleware(
