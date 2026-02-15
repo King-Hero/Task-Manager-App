@@ -1,8 +1,14 @@
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000/api",
-});
+const baseURL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  (process.env.NODE_ENV === "development" ? "http://127.0.0.1:8000/api" : null);
+
+if (!baseURL) {
+  throw new Error("NEXT_PUBLIC_API_BASE_URL is not set");
+}
+
+const api = axios.create({ baseURL });
 
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
