@@ -12,13 +12,16 @@ app = FastAPI(title="Task Manager API", version="0.1.0")
 
 origins = [o.strip() for o in settings.CORS_ORIGINS.split(",") if o.strip()]
 
+ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://task-manager-frontend-619h.onrender.com",  # <-- frontend URL
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ],
-    allow_credentials=True,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
