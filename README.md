@@ -1,46 +1,14 @@
-\# Task Manager Web App
+\# Task Manager Web Application
 
 
 
-A full-stack task management application that supports user authentication, task CRUD operations, filtering, and secure API access. This project demonstrates modern full-stack architecture using Next.js, FastAPI, MongoDB, and JWT authentication.
+\## Overview  
+
+This project is a full-stack task management application that allows authenticated users to create, update, filter, and manage tasks. It demonstrates secure RESTful API design, cloud deployment, and scalable architecture suitable for modern AI-driven applications.
 
 
 
----
-
-
-
-\## Overview
-
-
-
-This application allows users to:
-
-
-
-\- Sign up and log in using email and password
-
-\- Create, update, delete, and manage tasks
-
-\- Filter tasks by status and due date
-
-\- View only their own tasks (multi-user isolation)
-
-\- Securely interact with the backend using JWT authentication
-
-
-
-Bonus features implemented:
-
-
-
-\- Due date defaults
-
-\- Automatic filter refresh
-
-\- Robust error handling
-
-\- Production-ready architecture and security practices
+The system was designed with a focus on security, scalability, and extensibility, including an architecture that supports future AI and automation capabilities.
 
 
 
@@ -48,47 +16,135 @@ Bonus features implemented:
 
 
 
-\## Tech Stack
+\## Live URLs  
 
 
 
-\### Frontend
+Frontend  
 
-\- Next.js (App Router)
+👉 https://task-manager-frontend-6l9h.onrender.com  
 
-\- React
+
+
+Backend API  
+
+👉 https://task-manager-app-3hcs.onrender.com  
+
+
+
+Health Check  
+
+👉 https://task-manager-app-3hcs.onrender.com/api/health  
+
+
+
+---
+
+
+
+\## Demo Credentials  
+
+
+
+Email: demo@example.com  
+
+Password: Password123  
+
+
+
+---
+
+
+
+\## Features  
+
+
+
+\### Core  
+
+* Secure email/password authentication  
+* JWT-based stateless sessions  
+* Multi-user data isolation  
+
+\- Task CRUD operations  
+
+\- Task filtering by status and due date  
+
+\- Responsive UI  
+
+\- Cloud deployment  
+
+
+
+\### Security  
+
+\- Password hashing (Argon2)  
+
+\- JWT validation and token expiry  
+
+\- Protected API routes  
+
+\- Environment variable secret management  
+
+\- CORS protection  
+
+
+
+\### Scalability  
+
+\- RESTful architecture  
+
+\- Async FastAPI backend  
+
+\- MongoDB document model  
+
+\- Modular codebase  
+
+\- Separation of frontend and backend services  
+
+
+
+---
+
+
+
+\## Technology Stack  
+
+
+
+\### Frontend  
+
+\- Next.js (React)
 
 \- Axios
 
-\- Client-side JWT storage
+\- Context API
+
+\- Render deployment
 
 
 
-\### Backend
+\### Backend  
 
 \- Python
 
 \- FastAPI
 
-\- Motor (async MongoDB)
-
 \- JWT authentication
 
-\- Argon2 password hashing
-
-
-
-\### Database
+\- Pydantic validation
 
 \- MongoDB
 
+\- Async API design
 
 
-\### DevOps
 
-\- Docker (MongoDB)
+\### Infrastructure  
 
-\- Environment-based configuration
+\- Render cloud deployment  
+
+\- Docker-ready architecture  
 
 
 
@@ -96,19 +152,259 @@ Bonus features implemented:
 
 
 
-\## Architecture
+\## Local Setup  
 
 
 
-```mermaid
+\### 1. Clone repository  
 
-flowchart LR
+```bash
 
-&nbsp;   User --> Frontend\[Next.js Frontend]
+git clone https://github.com/King-Hero/Task-Manager-App
 
-&nbsp;   Frontend -->|REST JSON| Backend\[FastAPI Backend]
+cd task-manager
 
-&nbsp;   Backend -->|JWT Auth| Mongo\[(MongoDB)]
+
+
+\### 2. Backend
+
+```bash
+cd backend
+
+python -m venv .venv
+
+source .venv/bin/activate   # Windows: .venv\\Scripts\\Activate
+
+pip install -r requirements.txt
+
+
+
+Create .env
+
+```ini
+
+MONGODB\_URI=your\_local\_or\_atlas\_uri
+
+JWT\_SECRET=your\_secret
+
+
+
+Run:
+
+```bash
+
+uvicorn app.main:app --reload
+
+
+
+\### 3. Frontend
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+
+
+
+Create .env.local
+
+```ini
+
+NEXT\_PUBLIC\_API\_BASE\_URL=http://127.0.0.1:8000/api
+
+
+
+---
+
+
+
+\## API Design
+
+
+
+The backend follows REST principles:
+
+
+
+| Method | Endpoint         | Description     |
+
+| ------ | ---------------- | --------------- |
+
+| POST   | /api/auth/signup | Register user   |
+
+| POST   | /api/auth/login  | Login           |
+
+| GET    | /api/tasks       | List user tasks |
+
+| POST   | /api/tasks       | Create task     |
+
+| PATCH  | /api/tasks/{id}  | Update task     |
+
+| DELETE | /api/tasks/{id}  | Delete task     |
+
+
+
+
+
+\## Security Design
+
+
+
+Authentication is implemented using JWT tokens.
+
+Protected routes use FastAPI dependency injection:
+
+```scss
+
+Depends(get\_current\_user\_id)
+
+
+
+This ensures secure, reusable authentication logic and aligns with enterprise backend architecture.
+
+
+
+---
+
+
+
+\## Testing
+
+
+
+The backend includes automated tests covering:
+
+
+
+* Authentication
+
+
+
+* Task CRUD
+
+
+
+* User data isolation
+
+
+
+Run tests:
+
+
+
+```bash
+
+pytest
+
+
+
+---
+
+
+
+\## Deployment
+
+
+
+Both frontend and backend are deployed using Render.
+
+
+
+Key considerations:
+
+
+
+* Environment variables managed securely
+
+
+
+* No secrets exposed in frontend
+
+
+
+* API base URL configured per environment
+
+
+
+* CORS configured for production
+
+
+
+---
+
+
+
+\### Tradeoffs and Design Decisions
+
+
+
+* FastAPI was selected for performance, async support, and native validation.
+
+
+
+* MongoDB enables flexible schema evolution and rapid development.
+
+
+
+* JWT authentication supports scalability and stateless APIs.
+
+
+
+* Render was selected for simplicity and cost efficiency.
+
+
+
+\### Future improvements:
+
+
+
+* AI-powered task planning
+
+
+
+* Real-time updates via WebSockets
+
+
+
+* Role-based permissions
+
+
+
+* Background workers
+
+
+
+* Observability and logging
+
+
+
+* CI/CD pipelines
+
+
+
+---
+
+
+
+Architecture
+
+
+
+See architecture diagram in:
+
+
+
+* architecture.mmd
+
+
+
+
+
+
+
+
 
 
 
