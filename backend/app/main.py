@@ -9,7 +9,7 @@ from app.routes.tasks import router as tasks_router
 from app.routes.auth import router as auth_router
 from app.routes.ai import router as ai_router
 
-
+# deploy: enable ai router
 
 app = FastAPI(title="Task Manager API", version="0.1.0")
 
