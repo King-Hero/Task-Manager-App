@@ -4,23 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "../../lib/api";
 
-type Task = {
-  id: string;
-  title: string;
-  description?: string | null;
-  due_date?: string | null;
-  status?: "todo" | "in_progress" | "done" | string;
-  priority?: "high" | "medium" | "low" | string;
-};
-
-type EditDraft = {
-  title: string;
-  description: string;
-  dueDate: string; // YYYY-MM-DD
-  status: "todo" | "in_progress" | "done";
-  priority: "high" | "medium" | "low";
-};
-
 export default function Tasks() {
   const router = useRouter();
 
