@@ -18,6 +18,11 @@ class Settings(BaseSettings):
     JWT_ACCESS_MINUTES: int = 15
     JWT_REFRESH_DAYS: int = 7
 
+    OPENAI_API_KEY: str | None = None
+    OPENAI_MODEL: str = "gpt-4o-mini"
+    AI_MAX_CHARS: int = 1200
+
+
     model_config = SettingsConfigDict(env_file=str(ENV_PATH), extra="ignore")
 
 settings = Settings()
