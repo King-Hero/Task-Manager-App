@@ -1,0 +1,188 @@
+.page {
+  max-width: 980px;
+  margin: 40px auto;
+  padding: 0 16px;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  color: #111;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.button {
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.buttonPrimary {
+  padding: 10px 12px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.buttonDanger {
+  padding: 10px 12px;
+  border: 1px solid #fecaca;
+  background: #fff5f5;
+  color: #991b1b;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.button:disabled,
+.buttonPrimary:disabled,
+.buttonDanger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.card {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
+.cardTitle {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #374151;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 10px;
+}
+
+@media (max-width: 720px) {
+  .grid2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  outline: none;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.error {
+  margin-top: 10px;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0 0;
+  display: grid;
+  gap: 10px;
+}
+
+.task {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+}
+
+.taskEditing {
+  background: #fafafa;
+}
+
+.taskTitle {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 700;
+}
+
+.badgeHigh {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+.badgeMedium {
+  background: #fef9c3;
+  color: #854d0e;
+  border-color: #fde68a;
+}
+
+.badgeLow {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+}
