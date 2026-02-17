@@ -1,108 +1,121 @@
-from datetime import date, datetime, timedelta, timezone
-import json
+from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone, date
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-from app.core.config import settings
 from app.core.deps import get_current_user_id
+from app.core.config import settings
 
 router = APIRouter(tags=["ai"])
 
 
-class SuggestDueDateIn(BaseModel):
-    title: str 
+class DueDateSuggestIn(BaseModel):
+    title: str
     description: str | None = None
 
 
-class SuggestDueDateOut(BaseModel):
+class DueDateSuggestOut(BaseModel):
     due_date: str  # YYYY-MM-DD
-    confidence: str  # low|medium|high
-    reasoning: str | None = None
+    confidence: str
+    reasoning: str
 
 
-def today_utc() -> date:
-    return datetime.now(timezone.utc).date()
+def _fallback_due_date(days: int = 3) -> str:
+    d = (datetime.now(timezone.utc) + timedelta(days=days)).date()
+    return d.isoformat()
 
 
-def fallback_due_date() -> date:
-    return today_utc() + timedelta(days=3)
+def _as_yyyy_mm_dd(s: str) -> str:
+    # Accept "YYYY-MM-DD" or ISO strings; normalize to YYYY-MM-DD
+    try:
+        if len(s) >= 10:
+            return s[:10]
+        return s
+    except Exception:
+        return _fallback_due_date()
 
 
-@router.post("/ai/suggest-due-date", response_model=SuggestDueDateOut)
+@router.post("/ai/suggest-due-date", response_model=DueDateSuggestOut)
 async def suggest_due_date(
-    payload: SuggestDueDateIn,
+    payload: DueDateSuggestIn,
     user_id: str = Depends(get_current_user_id),
 ):
-    if not settings.OPENAI_API_KEY:
-        # reviewer-friendly error
-        raise HTTPException(status_code=500, detail="OPENAI_API_KEY not configured")
-
-    title = payload.title.strip()
-    desc = (payload.description or "").strip()
-    desc = desc[: settings.AI_MAX_CHARS]
-
-    # OpenAI call with strict JSON output
-    try:
-        from openai import OpenAI
-
-        client = OpenAI(api_key=settings.OPENAI_API_KEY)
-        model = settings.OPENAI_MODEL
-
-        system = (
-            "You are a task management assistant. "
-            "Return ONLY valid JSON (no markdown). "
-            "Schema: {\"due_date\":\"YYYY-MM-DD\",\"confidence\":\"low|medium|high\",\"reasoning\":\"...\"}. "
-            "Rules: due_date must be today or later. "
-            "If unclear, choose a reasonable date within the next 14 days."
+    api_key = getattr(settings, "OPENAI_API_KEY", "") or ""
+    if not api_key.strip():
+        # For submission: don't crash; return explicit fallback and explain.
+        return DueDateSuggestOut(
+            due_date=_fallback_due_date(3),
+            confidence="low",
+            reasoning="OPENAI_API_KEY not configured in this environment; fallback (+3 days).",
         )
 
-        user_msg = {
-            "today": today_utc().isoformat(),
-            "task": {"title": title, "description": desc},
-        }
+    # --- OpenAI call (server-side only) ---
+    try:
+        from openai import OpenAI  # pip install openai
+    except Exception:
+        return DueDateSuggestOut(
+            due_date=_fallback_due_date(3),
+            confidence="low",
+            reasoning="OpenAI SDK not installed; fallback (+3 days).",
+        )
 
+    client = OpenAI(api_key=api_key)
+
+    # Keep the prompt tight and controlled
+    title = (payload.title or "").strip()
+    desc = (payload.description or "").strip()
+    text = f"Title: {title}\nDescription: {desc}".strip()
+
+    today = datetime.now(timezone.utc).date().isoformat()
+
+    system = (
+        "You are a helpful assistant that proposes a due date for a task.\n"
+        "Return STRICT JSON with keys: due_date (YYYY-MM-DD), confidence (low|medium|high), reasoning (<=140 chars).\n"
+        "Rules:\n"
+        f"- Today's date is {today}.\n"
+        "- If user says 'tomorrow', 'next week', etc., resolve appropriately.\n"
+        "- If unclear, choose a reasonable date within 3-14 days.\n"
+        "- Do not include any extra keys or text."
+    )
+
+    try:
         resp = client.chat.completions.create(
-            model=model,
+            model=getattr(settings, "OPENAI_MODEL", "gpt-4o-mini"),
             messages=[
                 {"role": "system", "content": system},
-                {"role": "user", "content": json.dumps(user_msg)},
+                {"role": "user", "content": text},
             ],
             temperature=0.2,
-            max_tokens=160,
+            max_tokens=120,
         )
 
-        content = (resp.choices[0].message.content or "").strip()
+        content = resp.choices[0].message.content or ""
+        # Parse the JSON safely without being fragile
+        import json
+
         data = json.loads(content)
+        due_date = _as_yyyy_mm_dd(str(data.get("due_date", "")))
+        confidence = str(data.get("confidence", "medium")).lower()
+        reasoning = str(data.get("reasoning", "")).strip()
 
-        due_str = str(data.get("due_date", "")).strip()
-        conf = str(data.get("confidence", "low")).strip().lower()
-        reasoning = data.get("reasoning")
+        if confidence not in {"low", "medium", "high"}:
+            confidence = "medium"
 
-        d = date.fromisoformat(due_str)
-        if d < today_utc():
-            raise ValueError("due_date is in the past")
+        if not due_date or len(due_date) != 10:
+            due_date = _fallback_due_date(7)
+            confidence = "low"
+            reasoning = "AI output invalid date; fallback to +7 days."
 
-        if conf not in {"low", "medium", "high"}:
-            conf = "low"
+        if len(reasoning) > 140:
+            reasoning = reasoning[:140].rstrip()
 
-        # clamp if too far out
-        horizon = today_utc() + timedelta(days=14)
-        if d > horizon:
-            d = horizon
-            conf = "low"
-
-        return {
-            "due_date": d.isoformat(),
-            "confidence": conf,
-            "reasoning": str(reasoning) if reasoning else None,
-        }
+        return DueDateSuggestOut(due_date=due_date, confidence=confidence, reasoning=reasoning)
 
     except Exception:
-        # safe fallback
-        d = fallback_due_date()
-        return {
-            "due_date": d.isoformat(),
-            "confidence": "low",
-            "reasoning": "Fallback suggestion (AI unavailable).",
-        }
+        # Never take down the app because AI fails
+        return DueDateSuggestOut(
+            due_date=_fallback_due_date(7),
+            confidence="low",
+            reasoning="AI call failed; fallback to +7 days.",
+        )
