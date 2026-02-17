@@ -1,164 +1,137 @@
-\# Task Manager Web Application
+# Task Manager Web Application
 
+## Overview
 
+This project is a full-stack, cloud-deployed task management application that enables authenticated users to securely create, manage, and track their tasks. The system demonstrates modern RESTful API design, secure authentication, scalable architecture, and extensibility for AI-driven capabilities.
 
-\## Overview  
-
-This project is a full-stack task management application that allows authenticated users to create, update, filter, and manage tasks. It demonstrates secure RESTful API design, cloud deployment, and scalable architecture suitable for modern AI-driven applications.
-
-
-
-The system was designed with a focus on security, scalability, and extensibility, including an architecture that supports future AI and automation capabilities.
-
-
+The solution was built with a strong focus on security, reliability, and production-ready engineering practices. It reflects real-world backend architecture patterns including stateless authentication, modular services, and cloud deployment.
 
 ---
 
-
-
-\## Live URLs  
-
-
+## Live Application
 
 Frontend  
-
 👉 https://task-manager-frontend-6l9h.onrender.com  
 
-
-
 Backend API  
-
 👉 https://task-manager-app-3hcs.onrender.com  
 
-
-
 Health Check  
-
 👉 https://task-manager-app-3hcs.onrender.com/api/health  
 
-
-
 ---
 
-
-
-\## Demo Credentials  
-
-
+## Demo Credentials
 
 Email: demo@example.com  
-
 Password: Password123  
 
+---
 
+## Features
+
+### Core Functionality
+- Secure user authentication and authorization
+- Task creation, update, deletion, and filtering
+- Task prioritization and status tracking
+- Due date management
+- Filtering by status and due date
+- Inline editing for improved usability
+- Responsive, clean user interface
+- Multi-user isolation and data security
 
 ---
 
-
-
-\## Features  
-
-
-
-\### Core  
-
-* Secure email/password authentication  
-* JWT-based stateless sessions  
-* Multi-user data isolation  
-
-\- Task CRUD operations  
-
-\- Task filtering by status and due date  
-
-\- Responsive UI  
-
-\- Cloud deployment  
-
-
-
-\### Security  
-
-\- Password hashing (Argon2)  
-
-\- JWT validation and token expiry  
-
-\- Protected API routes  
-
-\- Environment variable secret management  
-
-\- CORS protection  
-
-
-
-\### Scalability  
-
-\- RESTful architecture  
-
-\- Async FastAPI backend  
-
-\- MongoDB document model  
-
-\- Modular codebase  
-
-\- Separation of frontend and backend services  
-
-
+### Security
+- Password hashing using Argon2
+- JWT-based stateless authentication
+- Token validation and expiry
+- Protected backend routes using dependency injection
+- Secure environment variable management
+- CORS configuration for production environments
+- No sensitive secrets exposed to the frontend
 
 ---
 
-
-
-\## Technology Stack  
-
-
-
-\### Frontend  
-
-\- Next.js (React)
-
-\- Axios
-
-\- Context API
-
-\- Render deployment
-
-
-
-\### Backend  
-
-\- Python
-
-\- FastAPI
-
-\- JWT authentication
-
-\- Pydantic validation
-
-\- MongoDB
-
-\- Async API design
-
-
-
-\### Infrastructure  
-
-\- Render cloud deployment  
-
-\- Docker-ready architecture  
-
-
+### AI (Bonus Feature)
+- Intelligent due date suggestion powered by OpenAI
+- Confidence scoring and short reasoning provided
+- Secure server-side AI integration
+- Graceful fallback logic ensures system reliability if AI is unavailable
+- Architecture designed to support future automation and task intelligence
 
 ---
 
+### Scalability and Architecture
+- RESTful backend design
+- Asynchronous FastAPI services
+- Modular codebase for maintainability
+- Separation of frontend and backend services
+- MongoDB document model for flexible schema evolution
+- Stateless architecture for horizontal scalability
+- Designed for future containerization and microservice expansion
 
+---
 
-\## Local Setup  
+## Technology Stack
 
+### Frontend
+- Next.js (React)
+- Axios for API communication
+- Context and client state management
+- Deployed on Render
 
+### Backend
+- Python
+- FastAPI
+- Async API design
+- JWT authentication
+- Pydantic validation
+- MongoDB (Atlas)
 
-\### 1. Clone repository  
+### Infrastructure
+- Render cloud platform
+- Environment-based configuration
+- Secure production deployment
+- Cloud database integration
 
-```bash
+---
+
+## Quick Demo Workflow
+
+1. Register or log in using the demo credentials.
+2. Create a new task.
+3. Use the AI “Suggest Due Date” feature.
+4. Update, filter, and manage tasks.
+5. Edit tasks inline.
+6. Mark tasks as complete.
+
+This demonstrates authentication, CRUD functionality, AI integration, and user isolation.
+
+---
+
+## Architecture Overview
+
+The system follows a modern client-server architecture:
+
+1. The Next.js frontend communicates with the backend through REST APIs.
+2. The FastAPI backend manages authentication, business logic, and AI integration.
+3. JWT tokens enable secure and scalable stateless sessions.
+4. MongoDB stores user and task data.
+5. AI capabilities are exposed through a dedicated backend endpoint.
+6. All secrets and API keys are stored securely in environment variables.
+
+The architecture is designed to support future extensions such as real-time updates, automation workflows, and advanced AI planning.
+
+See architecture diagram in:
+- `architecture.mmd`
+
+---
+
+## Local Setup
+
+### 1. Clone Repository
+ 
 
 git clone https://github.com/King-Hero/Task-Manager-App
 
@@ -166,53 +139,53 @@ cd task-manager
 
 
 
-\### 2. Backend
+### 2. Backend
 
-```bash
 cd backend
 
 python -m venv .venv
 
-source .venv/bin/activate   # Windows: .venv\\Scripts\\Activate
+
+Activate environment:
+
+Mac/Linux:
+
+source .venv/bin/activate   
+
+# Windows: 
+
+.venv\\Scripts\\activate
+
+# Install dependencies
 
 pip install -r requirements.txt
 
 
 
-Create .env
+Create .env file:
 
-```ini
-
-MONGODB\_URI=your\_local\_or\_atlas\_uri
-
-JWT\_SECRET=your\_secret
+MONGODB_URI=your_local_or_atlas_uri
+JWT_SECRET=your_secret
+OPENAI_API_KEY=your_key_optional
 
 
-
-Run:
-
-```bash
+Run backend:
 
 uvicorn app.main:app --reload
 
 
 
-\### 3. Frontend
+### 3. Frontend
 
-```bash
 cd frontend
-
 npm install
-
 npm run dev
 
 
 
-Create .env.local
+Create .env.local:
 
-```ini
-
-NEXT\_PUBLIC\_API\_BASE\_URL=http://127.0.0.1:8000/api
+NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000/api
 
 
 
@@ -220,11 +193,11 @@ NEXT\_PUBLIC\_API\_BASE\_URL=http://127.0.0.1:8000/api
 
 
 
-\## API Design
+## API Design
 
 
 
-The backend follows REST principles:
+The backend follows REST principles and JSON standards:
 
 
 
@@ -248,65 +221,50 @@ The backend follows REST principles:
 
 
 
-\## Security Design
+## Security Design
 
 
 
-Authentication is implemented using JWT tokens.
+Authentication is implemented using JWT tokens for stateless session management.
 
 Protected routes use FastAPI dependency injection:
 
-```scss
-
-Depends(get\_current\_user\_id)
+Depends(get_current_user_id)
 
 
 
-This ensures secure, reusable authentication logic and aligns with enterprise backend architecture.
-
+This ensures:
+- Centralized security logic
+- Scalable architecture
+- Enterprise-grade API design
+- Reusable authentication middleware
 
 
 ---
 
 
 
-\## Testing
+## Testing
 
 
 
 The backend includes automated tests covering:
 
-
-
 * Authentication
-
-
-
 * Task CRUD
-
-
-
-* User data isolation
+* User isolation
 
 
 
 Run tests:
 
-
-
-```bash
-
 pytest
-
-
 
 ---
 
 
 
-\## Deployment
-
-
+## Deployment
 
 Both frontend and backend are deployed using Render.
 
@@ -314,86 +272,64 @@ Both frontend and backend are deployed using Render.
 
 Key considerations:
 
+- Environment variables managed securely
+- No secrets exposed in client code
+- Production CORS configuration
+- Cloud MongoDB integration
+- Backend and frontend deployed independently
+
+---
+
+## Reliability and AI Fallback
+
+The AI module includes deterministic fallback logic to ensure system stability if external AI services are unavailable. This prevents downtime and maintains core application functionality.
+
+---
 
 
-* Environment variables managed securely
+### Tradeoffs and Design Decisions
 
 
 
-* No secrets exposed in frontend
+- FastAPI was selected for performance, async support, and native validation.
+- MongoDB enables flexible schema evolution and rapid development.
+- JWT authentication supports scalability and stateless APIs.
+- Render was selected for simplicity and cost efficiency.
 
 
 
-* API base URL configured per environment
+### Future improvements:
 
-
-
-* CORS configured for production
+- AI-powered task prioritization and planning
+- Real-time updates via WebSockets
+- Role-based access control
+- Background job scheduling
+- Observability and monitoring
+- CI/CD pipelines
+- Containerization with Docker
+- Advanced analytics and insights
 
 
 
 ---
 
+## Author
 
-
-\### Tradeoffs and Design Decisions
-
-
-
-* FastAPI was selected for performance, async support, and native validation.
-
-
-
-* MongoDB enables flexible schema evolution and rapid development.
-
-
-
-* JWT authentication supports scalability and stateless APIs.
-
-
-
-* Render was selected for simplicity and cost efficiency.
-
-
-
-\### Future improvements:
-
-
-
-* AI-powered task planning
-
-
-
-* Real-time updates via WebSockets
-
-
-
-* Role-based permissions
-
-
-
-* Background workers
-
-
-
-* Observability and logging
-
-
-
-* CI/CD pipelines
-
-
+This project demonstrates modern full-stack engineering, AI integration, and scalable system design aligned with enterprise best practices.
 
 ---
 
+## Architecture Overview
 
+The system follows a modern client-server architecture:
 
-Architecture
-
-
+1. The frontend communicates with the backend via REST APIs.
+2. Authentication is handled through JWT.
+3. MongoDB stores users and task data.
+4. AI capabilities are exposed via a dedicated backend endpoint.
+5. OpenAI API keys are secured server-side.
 
 See architecture diagram in:
-
 
 
 * architecture.mmd
