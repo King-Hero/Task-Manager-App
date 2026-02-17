@@ -1,13 +1,26 @@
 flowchart LR
-  U[User Browser] --> FE[Next.js + React (Vercel)]
-  FE -->|REST JSON + JWT| API[FastAPI (Render/Fly)]
-  API --> DB[(MongoDB)]
 
-  subgraph Frontend
-    FE --> LS[LocalStorage: access_token]
-  end
+User[User Browser]
 
-  subgraph Backend
-    API --> AUTH[Auth: Argon2 + JWT]
-    API --> TASKS[Tasks CRUD + Filters]
-  end
+Frontend[Next.js Frontend]
+
+Backend[FastAPI Backend]
+
+Auth[JWT Authentication]
+
+Tasks[Task Service]
+
+AI[AI Suggestion Service]
+
+Mongo[(MongoDB Atlas)]
+
+OpenAI[(OpenAI API)]
+
+User --> Frontend
+Frontend --> Backend
+Backend --> Auth
+Backend --> Tasks
+Tasks --> Mongo
+Backend --> AI
+AI --> OpenAI
+Auth --> Mongo
