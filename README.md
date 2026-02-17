@@ -313,7 +313,7 @@ The AI module includes deterministic fallback logic to ensure system stability i
 
 ---
 
-## Author
+## Author Notes
 
 This project demonstrates modern full-stack engineering, AI integration, and scalable system design aligned with enterprise best practices.
 
